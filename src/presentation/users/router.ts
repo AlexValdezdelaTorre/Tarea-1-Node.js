@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "./controller";
-import { PostService } from "../services/post.service";
+import { PostService } from "../services/service";
 
 
 export class UserRoutes {

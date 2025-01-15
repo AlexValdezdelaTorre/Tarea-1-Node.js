@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PostService } from "../services/post.service";
+import { PostService } from "../services/service";
 import { RepairsController } from "./controller";
 
 

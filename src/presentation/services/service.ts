@@ -11,7 +11,7 @@ export class PostService {
     constructor() {}
 
 
-    //repairs
+    //repairs Service
 
     async findAllService() {
 
@@ -80,7 +80,7 @@ export class PostService {
     }
 
 
-    //Users
+    //Users Service
     async findAllUsers() {
             try {
               return await Users.find({

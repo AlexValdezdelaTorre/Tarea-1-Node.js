@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { PostService } from "../services/post.service";
+import { PostService } from "../services/service";
 import { CustomError, UpdateUsersDTO } from "../../domain";
 import { CreateUsersDTO } from "../../domain/dtos/users/createUser.dto";
 
