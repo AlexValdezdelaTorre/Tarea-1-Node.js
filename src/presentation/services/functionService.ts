@@ -7,7 +7,7 @@ import { UpdateServicesDTO } from "../../domain/dtos/repairs/updateService.dto";
 
 
 
-export class PostService {
+export class FunctionService {
     constructor() {}
 
 

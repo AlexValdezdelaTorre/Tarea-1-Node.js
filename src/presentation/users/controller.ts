@@ -1,12 +1,12 @@
 import { Request, Response } from "express"
-import { PostService } from "../services/service";
+import { FunctionService } from "../services/functionService";
 import { CustomError, UpdateUsersDTO } from "../../domain";
 import { CreateUsersDTO } from "../../domain/dtos/users/createUser.dto";
 
 
 
 export class UserController {
-    constructor(private readonly postService: PostService){}
+    constructor(private readonly functionService: FunctionService){}
     
     private handleError = (error: unknown, res: Response) => {
       if (error instanceof CustomError) {
@@ -18,7 +18,7 @@ export class UserController {
     }
 
     findAllUsers = async (req: Request, res: Response) => {
-        this.postService.findAllUsers()
+        this.functionService.findAllUsers()
         .then((data: any) => {
             return res.status(200).json(data)
         })
@@ -28,7 +28,7 @@ export class UserController {
     findIdUser = async (req: Request, res: Response) => {
         const { id } = req.params;
         
-        this.postService.findIdUser(id)
+        this.functionService.findIdUser(id)
         .then((data: any) => {
            return res.status(200).json(data)
         })
@@ -40,7 +40,7 @@ export class UserController {
         
         if(error) return res.status(422).json({ message: error});
 
-        this.postService.createUser(createUsersDto!)
+        this.functionService.createUser(createUsersDto!)
         .then((data: any) => {
             return res.status(201).json(data);
         })
@@ -53,7 +53,7 @@ export class UserController {
         
         if(error) return res.status(422).json({ message: error});
         
-        this.postService.updateUser(id, updateUsersDTO!)
+        this.functionService.updateUser(id, updateUsersDTO!)
         .then((data) => {
             return res.status(200).json(data)
         })
@@ -63,7 +63,7 @@ export class UserController {
     deleteUser = (req: Request, res: Response) => {
     const { id } = req.params;
 
-        this.postService.deleteUser(id)
+        this.functionService.deleteUser(id)
         .then((data) => {
             return res.status(200).json(null)
         })

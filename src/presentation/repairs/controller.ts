@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { PostService } from "../services/service";
+import { FunctionService } from "../services/functionService";
 import { CustomError } from "../../domain";
 import { UpdateServicesDTO } from "../../domain/dtos/repairs/updateService.dto";
 //import { CreateUsersDTO } from "../../domain";
@@ -7,7 +7,7 @@ import { UpdateServicesDTO } from "../../domain/dtos/repairs/updateService.dto";
 
 export class RepairsController {
 
-    constructor(private readonly postService: PostService){}
+    constructor(private readonly functionService: FunctionService){}
 
     private handleError = (error: unknown, res: Response) => {
           if (error instanceof CustomError ) {
@@ -19,7 +19,7 @@ export class RepairsController {
         }
 
     findAllService = async (req: Request, res: Response) => {
-        this.postService.findAllService()
+        this.functionService.findAllService()
         .then((data: any) => {
             return res.status(200).json(data)
         })
@@ -29,7 +29,7 @@ export class RepairsController {
     findIdService = async (req: Request, res: Response) => {
         const { id } = req.params;
         
-        this.postService.findIdService(id)
+        this.functionService.findIdService(id)
         .then((data: any) => {
            return res.status(200).json(data)
         })
@@ -41,7 +41,7 @@ export class RepairsController {
         
         //if(error) return res.status(422).json({ message: error});
 
-        this.postService.createService(req.body)
+        this.functionService.createService(req.body)
         .then((data: any) => {
             return res.status(201).json(data);
         })
@@ -59,7 +59,7 @@ export class RepairsController {
                
                if(error) return res.status(422).json({ message: error});
                
-               this.postService.updateService(id, updateServicesDTO!)
+               this.functionService.updateService(id, updateServicesDTO!)
                .then((data) => {
                    return res.status(200).json(data)
                })
@@ -68,7 +68,7 @@ export class RepairsController {
 
 deleteService = (req: Request, res: Response) => {
     const { id } = req.params;
-        this.postService.deleteUser(id)
+        this.functionService.deleteUser(id)
         .then((data) => {
             return res.status(200).json(null)
         })

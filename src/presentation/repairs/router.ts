@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PostService } from "../services/service";
+import { FunctionService } from "../services/functionService";
 import { RepairsController } from "./controller";
 
 
@@ -7,8 +7,8 @@ export class RepairsRoutes {
     static get routes(): Router {
         const router = Router();
 
-        const postService = new PostService()
-        const repairsController = new RepairsController(postService);
+        const functionService = new FunctionService()
+        const repairsController = new RepairsController(functionService);
 
         router.get('/', repairsController.findAllService);
         router.get('/:id', repairsController.findIdService);
