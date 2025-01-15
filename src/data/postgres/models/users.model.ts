@@ -30,7 +30,7 @@ export class Users extends BaseEntity {
         length: 255,
         nullable: true,
         //unique: true,
-        default: "available"
+        default: ""
     })
     rol?: string | null
 

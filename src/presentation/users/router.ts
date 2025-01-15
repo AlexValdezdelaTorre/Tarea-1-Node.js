@@ -13,7 +13,7 @@ export class UserRoutes {
         router.get('/', userController.findAllUsers);
         router.get('/:id', userController.findIdUser);
         router.post('/', userController.createUser);
-        router.patch('/:id', userController.updateUser);
+        router.patch('/:Id', userController.updateUser);
         router.delete('/:id', userController.deleteUser);
         
         

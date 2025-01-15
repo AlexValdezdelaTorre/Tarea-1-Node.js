@@ -1,7 +1,9 @@
 
 import { Repairs } from "../../data/postgres/models/repairs.model";
 import { Users } from "../../data/postgres/models/users.model"
-//import { CreateUsersDTO } from "../../domain";
+import { CreateUsersDTO, CustomError, UpdateUsersDTO } from "../../domain";
+import { UpdateServicesDTO } from "../../domain/dtos/repairs/updateService.dto";
+
 
 
 
@@ -12,31 +14,37 @@ export class PostService {
     //repairs
 
     async findAllService() {
-        
-        return {
-            message: "Listado de motos a reparar",
-        }
-            /*try {
+
+            try {
               return await Repairs.find({
                  where: {
                      status: true,
                  }
               })
             } catch (error) {
-              throw new Error("Error buscando el servicio")
-            }*/
+              throw CustomError.internalServed("Error obteniendo datos")
+            }
     }
 
-    async findAIdServices(){
-        /*return {
-            message: "Buscando Id"
-        }*/
+    async findIdService(id: string){
+      const repair = await Repairs.findOne({
+        where: {
+          id,
+          status: true,
+        },
+      });
+
+      if(!repair) {
+        throw CustomError.notFound("User not found")
+      }
+      return repair
+        
     }
 
     async createService(repairData: any) {
         
         const repairs = new Repairs()
-        repairs.status = repairData.status;
+        repairs.userId = repairData.userId;
         
          try {
            const createdService = await repairs.save();
@@ -46,16 +54,29 @@ export class PostService {
          }
     }
 
-    async updateStatus(){
-        return {
-            message: "Actualizar status"
-        }
+    async updateService(id: string, repairsData: UpdateServicesDTO){
+      const repair = await this.findIdService(id)
+
+      repair.userId = repairsData.userId.trim()
+      
+
+      try {
+        return await repair.save()
+      } catch (error) {
+        throw CustomError.internalServed("Error actualizando el usuario")
+      }
     }
 
-    async cancelRepair(){
-        return {
-            message: "Cita cancelada"
-        }
+    async cancelService(id: string){
+      const serviceId = await this.findIdService(id)
+
+      serviceId.status = false;
+
+      try {
+        serviceId.save()
+      } catch (error) {
+        throw CustomError.internalServed("Error eliminando el usuario")
+      }
     }
 
 
@@ -68,7 +89,7 @@ export class PostService {
                  }
               })
             } catch (error) {
-              throw new Error("Error creando el post")
+              throw CustomError.internalServed("Error obteniendo datos")
             }
     }
 
@@ -81,12 +102,12 @@ export class PostService {
       });
 
       if(!user) {
-        throw new Error("User not found")
+        throw CustomError.notFound("User not found")
       }
       return user
-      }
+    }
        
-    async createUser(usersData: any /*CreateUsersDTO*/) { 
+    async createUser(usersData:  CreateUsersDTO) { 
       const users = new Users()
 
       users.name = usersData.name;
@@ -97,11 +118,11 @@ export class PostService {
        try {
          return await users.save();
        } catch (error) {
-         throw new Error("Error creando el usuario")
+         throw CustomError.internalServed("Error creando el usuario")
        }
     }
 
-    async updateUser(id: string, usersData: any){
+    async updateUser(id: string, usersData: UpdateUsersDTO){
         const user = await this.findIdUser(id)
 
         user.name = usersData.name.trim()
@@ -110,7 +131,7 @@ export class PostService {
         try {
           return await user.save()
         } catch (error) {
-          throw new Error("Error actualizando el usuario")
+          throw CustomError.internalServed("Error actualizando el usuario")
         }
     }
 
@@ -122,7 +143,7 @@ export class PostService {
         try {
           userId.save()
         } catch (error) {
-          throw new Error("Error actualizando el usuario")
+          throw CustomError.internalServed("Error eliminando el usuario")
         }
     }
 }

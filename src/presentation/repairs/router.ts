@@ -3,7 +3,7 @@ import { PostService } from "../services/post.service";
 import { RepairsController } from "./controller";
 
 
-export class UserRoutes {
+export class RepairsRoutes {
     static get routes(): Router {
         const router = Router();
 

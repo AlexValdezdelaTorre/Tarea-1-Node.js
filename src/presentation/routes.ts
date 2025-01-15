@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserRoutes } from "./users/router";
+import { RepairsRoutes } from "./repairs/router";
 
 export class AppRoutes {
     
@@ -7,7 +8,7 @@ export class AppRoutes {
         const router = Router();
 
         router.use('/api/users', UserRoutes.routes);
-        router.use('/api/repairs', UserRoutes.routes);
+        router.use('/api/repairs', RepairsRoutes.routes);
 
         return router;
     }
