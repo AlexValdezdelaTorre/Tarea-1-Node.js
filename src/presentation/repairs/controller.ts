@@ -1,13 +1,11 @@
 import { Request, Response } from "express"
-import { FunctionService } from "../services/functionService";
-import { CustomError } from "../../domain";
-import { UpdateServicesDTO } from "../../domain/dtos/repairs/updateService.dto";
-//import { CreateUsersDTO } from "../../domain";
+import { RepairService } from "../services/repairsService";
+import { CreateServicesDTO,  CustomError, UpdateServicesDTO } from "../../domain";
 
 
 export class RepairsController {
 
-    constructor(private readonly functionService: FunctionService){}
+    constructor(private readonly repairService: RepairService){}
 
     private handleError = (error: unknown, res: Response) => {
           if (error instanceof CustomError ) {
@@ -19,8 +17,8 @@ export class RepairsController {
         }
 
     findAllService = async (req: Request, res: Response) => {
-        this.functionService.findAllService()
-        .then((data: any) => {
+        this.repairService.findAllService()
+        .then((data) => {
             return res.status(200).json(data)
         })
         .catch((error: unknown) => this.handleError(error,res))
@@ -29,54 +27,44 @@ export class RepairsController {
     findIdService = async (req: Request, res: Response) => {
         const { id } = req.params;
         
-        this.functionService.findIdService(id)
-        .then((data: any) => {
+        this.repairService.findIdService(id)
+        .then((data) => {
            return res.status(200).json(data)
         })
         .catch((error: unknown) => this.handleError(error,res))  
     };  
 
-    createService = async ( req: Request, res: Response) => {
-        //const [error, createUsersDto] = CreateUsersDTO.create(req.body)
-        
-        //if(error) return res.status(422).json({ message: error});
+    createService = /*async*/ ( req: Request, res: Response) => {
+        const [error, createServiceDto] = CreateServicesDTO.create(req.body)
+    
+        if(error) return res.status(422).json({ message: error});
 
-        this.functionService.createService(req.body)
-        .then((data: any) => {
+        this.repairService.createService( createServiceDto!)
+        .then((data) => {
             return res.status(201).json(data);
         })
-        .catch((error: any) => {
-            return res.status(500).json({
-                message: "Internal Server Error",
-                error,
-            });
-        });
+        .catch((error: any) => this.handleError(error, res))
     };
 
     updateService = async (req: Request, res: Response) => {
         const { id } = req.params;
-        const [ error, updateServicesDTO] = UpdateServicesDTO.create(req.body)
+         /*const [ error, updateServicesDTO] = UpdateServicesDTO.create(req.body)
+                
+                if(error) return res.status(422).json({ message: error});*/
                
-               if(error) return res.status(422).json({ message: error});
-               
-               this.functionService.updateService(id, updateServicesDTO!)
-               .then((data) => {
+               this.repairService.updateService(id)
+               .then((data: any) => {
                    return res.status(200).json(data)
                })
                 .catch((error: unknown) => this.handleError(error,res)) 
     };   
 
-deleteService = (req: Request, res: Response) => {
-    const { id } = req.params;
-        this.functionService.deleteUser(id)
-        .then((data) => {
-            return res.status(200).json(null)
+    deleteService = (req: Request, res: Response) => {
+        const { id } = req.params;
+        this.repairService.deleteService(id)
+        .then((data: any) => {
+            return res.status(204).json(data)
         })
-         .catch((error) => {
-            return res.status(500).json({
-                message: "Internal Server Error",
-                error,
-            });
-         });  
-        };      
+        .catch((error: unknown) => this.handleError(error, res))   
+    }  
 }

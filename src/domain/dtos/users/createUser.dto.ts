@@ -1,18 +1,26 @@
+import { regularExp } from "../../../config";
+import { Role } from "../../../data";
+
+
 export class CreateUsersDTO {
     constructor(
-        public readonly name: string, 
-        public readonly email: string, 
-        public readonly password: string, 
-        public readonly rol: string, ){}
+        public name: string, 
+        public email: string, 
+        public password: string, 
+        public role: Role, ){}
 
-    static create(object: { [key: string]: any }): [string?, CreateUsersDTO?]{
-        const { name, email, password, rol } = object;
-
-        if(!name) return ['Missing name', undefined];
-        if(name.length <= 2) return ['The name must be at least a 2 characters'];
-        if(!email) return ['Missing email'];
-        if(email.length <= 8) return ['The email must be at least 8 characters'];
         
-        return [undefined, new CreateUsersDTO(name, email, password, rol)];
+
+        static create(object: { [key: string]: any }): [string?, CreateUsersDTO?]{
+        const { name, email, password, role } = object;
+
+        if(!name) return ['Missing name' /*undefined*/];
+        //if(name.length <= 2) return ['The name must be at least a 2 characters'];
+        if(!email) return ['Missing email'];
+        if(!regularExp.email.test(email)) return ['Invalid email'];
+        if(!password) return ["Missing password"];
+        if(!regularExp.password.test(password)) return ['The password must be at least 10 characters, and contain at least one uppercase letter, one lowercase and one especial character']
+        if(!role) return ['Missing rol']
+        return [undefined, new CreateUsersDTO(name, email, password, role)];
     }
 }

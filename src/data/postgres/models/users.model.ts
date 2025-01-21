@@ -1,4 +1,18 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { encriptAdapter } from "../../../config";
+
+export enum  Role  {
+    EMPLOYEE = "EMPLOYEE",
+    CLIENT = "CLIENT"
+}
+
+export enum Status {
+    
+  
+    AVAILABLE = "AVAILABLE",
+    DISABLED = "DISABLED",
+   
+}
 
 @Entity()
 export class Users extends BaseEntity {
@@ -14,29 +28,34 @@ export class Users extends BaseEntity {
 
     @Column('varchar', {
         
-        nullable: true,
+        nullable: false,
         length: 255,
         unique: true,
-        default: 'mail@gmail.com'
+       
     })
     email: string;
 
     @Column("varchar", {  
         nullable: false
     })
-    password: string | null
+    password: string 
     
-    @Column('varchar', {
-        length: 255,
-        nullable: true,
-        //unique: true,
-        default: ""
+    @Column('enum', {
+      enum: Role,
+      default: Role.EMPLOYEE
     })
-    rol?: string | null
+    role: Role
 
-    @Column('bool', {
-        default: true        
+    @Column('enum', {
+        
+        enum: Status,
+        default: Status.AVAILABLE        
     })
-    status: boolean
+    status: Status;
+
+    @BeforeInsert()
+    encryptedPassword(){
+        this.password = encriptAdapter.hash(this.password)
+    }
 
 }
