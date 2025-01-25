@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Users } from "./users.model";
+
 
 
 export enum RepairStatus {
@@ -23,7 +25,7 @@ export class Repairs extends BaseEntity {
     @Column("varchar", {
        length: 255,
        nullable: true,
-       unique: true 
+        
     })
     motorsNumber: string;
 
@@ -37,11 +39,9 @@ export class Repairs extends BaseEntity {
         enum: RepairStatus,
         default: RepairStatus.PENDING
     })
-    status: RepairStatus;
+    repairStatus: RepairStatus;
 
-    @Column('varchar', {
-        nullable: true
-    })
-    userId: string;
+    @ManyToOne(() => Users, (users) => users.repairs)
+    user: Users;
 
 }

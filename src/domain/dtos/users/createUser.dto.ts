@@ -14,8 +14,7 @@ export class CreateUsersDTO {
         static create(object: { [key: string]: any }): [string?, CreateUsersDTO?]{
         const { name, email, password, role } = object;
 
-        if(!name) return ['Missing name' /*undefined*/];
-        //if(name.length <= 2) return ['The name must be at least a 2 characters'];
+        if(!name) return ['Missing name'];
         if(!email) return ['Missing email'];
         if(!regularExp.email.test(email)) return ['Invalid email'];
         if(!password) return ["Missing password"];

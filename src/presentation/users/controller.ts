@@ -1,15 +1,9 @@
 import { Request, Response } from "express"
 import { CustomError, UpdateUsersDTO, CreateUsersDTO, LoginUserDTO } from "../../domain";
-import { UserService } from "../services/userService";
-
-
-
-
-
-
+import { UsersService } from "../services/usersService";
 
 export class UserController {
-    constructor(private readonly userService: UserService){}
+    constructor(private readonly userService: UsersService){}
     
     private handleError = (error: unknown, res: Response) => {
       if (error instanceof CustomError) {
@@ -38,19 +32,7 @@ export class UserController {
         .catch((error: unknown) => this.handleError(error,res))      
     };  
 
-    createUser = /*asyn*/ ( req: Request, res: Response) => {
-        const [error, createUsersDto] = CreateUsersDTO.create(req.body)
-        
-        if(error) return res.status(422).json({ message: error});
-
-        this.userService.createUser(createUsersDto!)
-        .then((data: any) => 
-            res.status(201).json(data)
-        )
-        .catch((error: unknown) => this.handleError(error, res))  
-    };
-
-    loginUser = /*async*/ ( req: Request, res: Response) => {
+    loginUser = ( req: Request, res: Response) => {
         const [error, loginUserDto] = LoginUserDTO.create(req.body)
         
         if(error) return res.status(422).json({ message: error});
@@ -61,16 +43,17 @@ export class UserController {
           .catch((error: unknown) => this.handleError(error, res))  
     };
 
-    /*findUserByemail = async ( req: Request, res: Response) => {
-        const { email } = req.params
+    createUser =  ( req: Request, res: Response) => {
+        const [error, createUsersDto] = CreateUsersDTO.create(req.body)
         
         if(error) return res.status(422).json({ message: error});
 
-        this.userService.findUserByEmail(email)
-          .then((data) => 
-          res.status(201).json(data))
-          .catch((error: unknown) => this.handleError(error, res))  
-    };*/
+        this.userService.createUser(createUsersDto!)
+        .then((data: any) => 
+            res.status(201).json(data)
+        )
+        .catch((error: unknown) => this.handleError(error, res))  
+    };
 
     validateAccount = (req: Request, res: Response) => {
         const { token } = req.params;
@@ -89,7 +72,7 @@ export class UserController {
         if(error) return res.status(422).json({ message: error});
         
         this.userService.updateUser(id, updateUsersDTO!)
-        .then((data) => {
+        .then((data: any) => {
             return res.status(200).json(data)
         })
          .catch((error: unknown) => this.handleError(error,res))  
@@ -101,13 +84,10 @@ export class UserController {
     const { id } = req.params;
 
         this.userService.deleteUser(id)
-        .then((data) => {
+        .then((data: any) => {
             return res.status(200).json(data)
         })
          .catch((error: unknown) => this.handleError(error,res)) 
-    };      
+    };     
+
 }
-
-    
-          
-

@@ -1,22 +1,27 @@
-//import z from "zod"
+import { regularExp } from "../../../config";
+
 
 export class CreateServicesDTO {
     constructor(
-        //public date: Date,
+        
+        public date: Date,
         public motorsNumber: string,
         public description: string, 
-        public userId: string,
-        public date: Date, 
+        public userId: string
+         
          ){}
 
     static create(object: { [key: string]: any }): [string?, CreateServicesDTO?]{
-        const { motorsNumber, description, userId, date } = object;
+        const {date, motorsNumber, description, userId } = object;
 
-        if(!userId) return ['Missing name', undefined];
-        //if(userId.length <= 2) return ['The name must be at least a 2 characters'];
-        //if(!userId) return ['Missing email'];
-        //if(userId.length <= 8) return ['The email must be at least 10 characters'];
+        if(!userId) return ['Missing Id', undefined];
+        if(!userId|| typeof userId !== 'string' || !regularExp.uuid.test(userId)){
+            return ['Invalid userId format, must be a UUID']
+        }
+        if(!motorsNumber) return ['Missing motor number', undefined];
+        if(!description) return ['You have to include a description of reparation service', undefined];
         
-        return [undefined, new CreateServicesDTO( motorsNumber, description, userId, date)];
+        
+        return [undefined, new CreateServicesDTO( date, motorsNumber, description, userId)];
     }
 }

@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { UserController } from "./controller";
-import { UserService } from "../services/userService";
+import { UsersService } from "../services/usersService";
 import { EmailService } from "../services/email.service";
 import { envs } from "../../config";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { Role } from "../../data";
+
 
 
 
@@ -15,20 +18,24 @@ export class UserRoutes {
             envs.MAILER_SECRET_KEY,
             envs.SEND_EMAIL
         )
-        const userService = new UserService(emailService)
-        const userController = new UserController(userService);
+        const usersService = new UsersService(emailService)
+        const userController = new UserController(usersService);
 
         router.get('/', userController.findAllUsers);
         router.get('/:id', userController.findIdUser);
         router.post('/', userController.createUser);
         router.post('/login', userController.loginUser);
-        //router.get('/email', userController.findUserByemail);
         router.get('/validate-email/:token', userController.validateAccount);
-        router.patch('/:Id', userController.updateUser);
-        router.delete('/:id', userController.deleteUser); 
         
+        router.use(AuthMiddleware.protec);
+        
+        router.patch('/:Id', AuthMiddleware.restricTo(Role.CLIENT), userController.updateUser);
+        router.delete('/:id', AuthMiddleware.restricTo(Role.CLIENT), userController.deleteUser); 
+
+        
+       
         
 
-          return router;
+     return router;
     }
 }
