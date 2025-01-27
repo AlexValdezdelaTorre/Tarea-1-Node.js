@@ -27,10 +27,12 @@ export class UserRoutes {
         router.post('/login', userController.loginUser);
         router.get('/validate-email/:token', userController.validateAccount);
         
-        router.use(AuthMiddleware.protec);
         
-        router.patch('/:Id', AuthMiddleware.restricTo(Role.CLIENT), userController.updateUser);
-        router.delete('/:id', AuthMiddleware.restricTo(Role.CLIENT), userController.deleteUser); 
+        router.use(AuthMiddleware.protec);
+
+        
+        router.patch('/:id', userController.updateUser);
+        router.delete('/:id', userController.deleteUser); 
 
         
        

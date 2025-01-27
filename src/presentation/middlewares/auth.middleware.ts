@@ -28,7 +28,7 @@ export class AuthMiddleware {
 
       if (!user) return res.status(401).json({ message: "Invalid User" });
 
-      req.body.sesionUser = user;
+      req.body.sessionUser = user;
       next();
     } catch (error) {
       return res.status(500).json({ message: "Invalid server error" });
@@ -37,7 +37,7 @@ export class AuthMiddleware {
 
   static restricTo = (...roles: Role[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-      if (!roles.includes(req.body.sesionUser.role)) {
+      if (!roles.includes(req.body.sessionUser.role)) {
         return res.status(403).json({ message: "You are not authorizated" });
       }
       next();

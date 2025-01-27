@@ -67,11 +67,16 @@ export class UserController {
     
     updateUser = async (req: Request, res: Response) => {
         const { id } = req.params;
-        const [ error, updateUsersDTO] = UpdateUsersDTO.create(req.body)
-        
+        const sessionUserId = req.body.sessionUser.id;
+
+        if (!id) {
+            return res.status(400).json({ message: "ID del usuario es requerido" });
+        }
+        const [ error, updateUsersDTO] = UpdateUsersDTO.create(req.body);
+    
         if(error) return res.status(422).json({ message: error});
         
-        this.userService.updateUser(id, updateUsersDTO!)
+        this.userService.updateUser(id, updateUsersDTO!, sessionUserId)
         .then((data: any) => {
             return res.status(200).json(data)
         })
@@ -82,12 +87,13 @@ export class UserController {
 
     deleteUser = (req: Request, res: Response) => {
     const { id } = req.params;
+    const sessionUserId = req.body.sessionUser.id
 
-        this.userService.deleteUser(id)
+        this.userService.deleteUser(id, sessionUserId)
         .then((data: any) => {
             return res.status(200).json(data)
         })
          .catch((error: unknown) => this.handleError(error,res)) 
-    };     
+    };    
 
 }

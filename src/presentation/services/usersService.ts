@@ -1,6 +1,7 @@
 
 import { encriptAdapter, envs } from "../../config";
 import { JwtAdapter } from "../../config/jwt.adapter";
+import { protecAccountOwner } from "../../config/validate-owner";
 import { Status, Users } from "../../data/postgres/models/users.model"
 import { CreateUsersDTO, CustomError, UpdateUsersDTO, LoginUserDTO } from "../../domain";
 import { EmailService } from "./email.service";
@@ -21,8 +22,9 @@ export class UsersService {
     }
 
     async findIdUser(id: string){
-
+    
       const result = await Users.createQueryBuilder("user")
+         
         .where("user.id = :id", { id: id})
         .andWhere("user.status = :status", {status: Status.AVAILABLE})
         .getOne();
@@ -30,12 +32,12 @@ export class UsersService {
         if(!result) {
           throw CustomError.notFound("User not found");
         }
-
+      
         return result;
-
+      }
       //const query = `SELECT * FROM "users" WHERE "id" = $1`;
       //const result = await Users.query(query, [id]);
-    };
+    
 
     async loginUser(credentials: LoginUserDTO) {
       const user = await this.findUserByEmail(credentials.email)
@@ -139,15 +141,19 @@ export class UsersService {
        }
     };
 
-    async updateUser(id: string, usersData: UpdateUsersDTO){
-      const user = await this.findIdUser(id)
+    async updateUser(id: string, usersData: UpdateUsersDTO, sessionUserId: string ){
+      const user = await this.findIdUser(id);
+
+      const isOwner = protecAccountOwner(user.id, sessionUserId);
+      if(!isOwner) throw CustomError.unAuthorized("You are not the owner of this account");
+      
 
       user.name = usersData.name.trim()
       user.email = usersData.email.toLowerCase().trim()
 
       try {
         const dbUser = await user.save();
-
+        
        return {
         name: dbUser.name,
         email: dbUser.email,
@@ -157,8 +163,11 @@ export class UsersService {
       }
     }
 
-    async deleteUser(id: string){
-      const userId = await this.findIdUser(id)
+    async deleteUser(id: string, sessionUserId: string){
+      const userId = await this.findIdUser(id);
+
+      const isOwner = protecAccountOwner(userId.id, sessionUserId);
+      if(!isOwner) throw CustomError.unAuthorized("You are not the owner of this account");
 
       userId.status = Status.DISABLED;
 
@@ -168,12 +177,11 @@ export class UsersService {
         return {
         id: userId.id,
         status: userId.status
-      }
+        }
       } catch (error) {
       throw CustomError.internalServed("Error eliminando el usuario")
       }
     }
-
-}
-       
+} 
   
+
