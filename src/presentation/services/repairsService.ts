@@ -3,6 +3,7 @@
 import { Repairs, RepairStatus } from "../../data/postgres/models/repairs.model";
 import { CreateServicesDTO, CustomError } from "../../domain";
 import { UsersService } from "./usersService";
+import { In } from "typeorm"
 
 
 export class RepairService {
@@ -16,7 +17,7 @@ export class RepairService {
             try {
               return await Repairs.find({
                  where: {
-                     repairStatus: RepairStatus.PENDING
+                     repairStatus: In([RepairStatus.PENDING, RepairStatus.COMPLETED])
                  },
                  relations: ['user'],
                  select: {

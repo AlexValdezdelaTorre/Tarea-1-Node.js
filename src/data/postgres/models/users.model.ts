@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { BaseEntity, BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { encriptAdapter } from "../../../config";
 import { Repairs } from "./repairs.model";
 
