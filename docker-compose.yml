@@ -20,3 +20,45 @@ services:
       MAILER_SECRET_KEY: fsdktvrqexkhmfam
       WEBSERVICE_URL: localhost:3001
     command: npm run start
+
+
+  app2:
+    build: .
+    ports:
+      - "3002:3001"
+    environment:
+      PORT: 3001
+      USERNAME_DATABASE: neondb_owner
+      PASSWORD_DATABASE: npg_5IWdta7TjMCY
+      HOST_DATABASE: ep-rough-bar-a465poql-pooler.us-east-1.aws.neon.tech
+      DATABASE: neondb
+      PORT_DATABASE: 5432
+      JWT_SEED: aG9sYSBjcmF5b2xh
+      JWT_EXPIRE_IN: 3h
+      SEND_EMAIL: "true"
+      MAILER_SERVICE: gmail
+      MAILER_EMAIL: alexvaldezmor@gmail.com
+      MAILER_SECRET_KEY: fsdktvrqexkhmfam
+      WEBSERVICE_URL: localhost:3001
+    command: npm run start
+
+
+  app3:
+    build: .
+    ports:
+      - "3003:3001"
+    environment:
+      PORT: 3001
+      USERNAME_DATABASE: neondb_owner
+      PASSWORD_DATABASE: npg_5IWdta7TjMCY
+      HOST_DATABASE: ep-rough-bar-a465poql-pooler.us-east-1.aws.neon.tech
+      DATABASE: neondb
+      PORT_DATABASE: 5432
+      JWT_SEED: aG9sYSBjcmF5b2xh
+      JWT_EXPIRE_IN: 3h
+      SEND_EMAIL: "true"
+      MAILER_SERVICE: gmail
+      MAILER_EMAIL: alexvaldezmor@gmail.com
+      MAILER_SECRET_KEY: fsdktvrqexkhmfam
+      WEBSERVICE_URL: localhost:3001
+    command: npm run start
